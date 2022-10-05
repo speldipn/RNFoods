@@ -1,6 +1,14 @@
 import { useLayoutEffect } from "react";
-import { ScrollView, Image, Text, StyleSheet, View } from "react-native";
+import {
+  ScrollView,
+  Image,
+  Text,
+  StyleSheet,
+  View,
+  Pressable,
+} from "react-native";
 import { MEALS } from "../data/dummy-data";
+import Ionicons from "@expo/vector-icons/Ionicons";
 
 function Subtitle({ title }) {
   return (
@@ -18,6 +26,18 @@ function List({ data }) {
   ));
 }
 
+function IconButton({ onPress }) {
+  return (
+    <Pressable
+      onPress={onPress}
+      android_ripple={{ color: "#ccc" }}
+      style={({ pressed }) => [pressed && { opacity: 0.7 }]}
+    >
+      <Ionicons name="star" size={24} color="#ffffff" />
+    </Pressable>
+  );
+}
+
 export default function MealDetailScreen({ navigation, route }) {
   const itemId = route.params.id;
   const item = MEALS.find((item) => {
@@ -25,7 +45,12 @@ export default function MealDetailScreen({ navigation, route }) {
   });
 
   useLayoutEffect(() => {
-    navigation.setOptions({ title: item.title });
+    navigation.setOptions({
+      title: item.title,
+      headerRight: () => (
+        <IconButton onPress={() => console.log("star icon clicked.")} />
+      ),
+    });
   }, [navigation, item]);
 
   return (
