@@ -7,10 +7,6 @@ function renderMealItem(data) {
   return <MealItem item={data.item} />;
 }
 
-function Divider() {
-  return <View style={styles.divider} />;
-}
-
 export default function MealScreen({ navigation, route }) {
   const { id } = route.params;
   const items = MEALS.filter(({ categoryIds }) => {
@@ -31,7 +27,6 @@ export default function MealScreen({ navigation, route }) {
         data={items}
         keyExtractor={(item) => item.id}
         renderItem={renderMealItem}
-        // ItemSeparatorComponent={() => <Divider />}
       />
     </View>
   );
@@ -40,6 +35,7 @@ export default function MealScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingBottom: 32,
   },
   divider: {
     width: "100%",
