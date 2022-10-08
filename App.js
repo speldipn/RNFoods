@@ -8,6 +8,7 @@ import MealDetailScreen from "./screens/MealDetailScreen";
 import { Ionicons } from "@expo/vector-icons";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import FavoritesScreen from "./screens/FavoritesScreen";
+import { FavoritesContextProvider } from "./store/context/favorites-context";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -51,36 +52,38 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar style="light" />
-      <NavigationContainer>
-        <Stack.Navigator
-          screenOptions={{
-            headerTintColor: "#ffffff",
-            headerStyle: { backgroundColor: "#351401" },
-            contentStyle: { backgroundColor: "#3f2f25" },
-          }}
-        >
-          <Stack.Screen
-            name="All Categories"
-            component={DrawerNavigation}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen name="Meal" component={MealScreen} />
-          <Stack.Screen
-            name="Detail"
-            component={MealDetailScreen}
-            options={{
-              headerRight: () => (
-                <Pressable
-                  android_ripple={{ color: "#ccc" }}
-                  style={({ pressed }) => [pressed && { opacity: 0.5 }]}
-                >
-                  <Text style={styles.favoritesButton}>Favorites</Text>
-                </Pressable>
-              ),
+      <FavoritesContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            screenOptions={{
+              headerTintColor: "#ffffff",
+              headerStyle: { backgroundColor: "#351401" },
+              contentStyle: { backgroundColor: "#3f2f25" },
             }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+          >
+            <Stack.Screen
+              name="All Categories"
+              component={DrawerNavigation}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen name="Meal" component={MealScreen} />
+            <Stack.Screen
+              name="Detail"
+              component={MealDetailScreen}
+              options={{
+                headerRight: () => (
+                  <Pressable
+                    android_ripple={{ color: "#ccc" }}
+                    style={({ pressed }) => [pressed && { opacity: 0.5 }]}
+                  >
+                    <Text style={styles.favoritesButton}>Favorites</Text>
+                  </Pressable>
+                ),
+              }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </FavoritesContextProvider>
     </SafeAreaView>
   );
 }

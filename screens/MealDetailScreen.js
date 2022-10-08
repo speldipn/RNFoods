@@ -1,4 +1,4 @@
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useContext, useState, useEffect } from "react";
 import {
   ScrollView,
   Image,
@@ -9,6 +9,7 @@ import {
 } from "react-native";
 import { MEALS } from "../data/dummy-data";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import FavoritesContext from "../store/context/favorites-context";
 
 function Subtitle({ title }) {
   return (
@@ -26,14 +27,39 @@ function List({ data }) {
   ));
 }
 
-function IconButton({ onPress }) {
+function IconButton({ id }) {
+  const { ids, addFovorites, removeFavorites } = useContext(FavoritesContext);
+  const [isFavorite, setIsFavorite] = useState(ids.includes(id));
+
+  function addId(id) {
+    setIsFavorite(true);
+    addFovorites(id);
+  }
+
+  function removeId(id) {
+    setIsFavorite(false);
+    removeFavorites(id);
+  }
+
+  function setFavorites() {
+    if (isFavorite) {
+      removeId(id);
+    } else {
+      addId(id);
+    }
+  }
+
   return (
     <Pressable
-      onPress={onPress}
+      onPress={() => setFavorites()}
       android_ripple={{ color: "#ccc" }}
       style={({ pressed }) => [pressed && { opacity: 0.7 }]}
     >
-      <Ionicons name="star" size={24} color="#ffffff" />
+      <Ionicons
+        name={isFavorite ? "star" : "star-outline"}
+        size={24}
+        color="#ffffff"
+      />
     </Pressable>
   );
 }
@@ -47,9 +73,7 @@ export default function MealDetailScreen({ navigation, route }) {
   useLayoutEffect(() => {
     navigation.setOptions({
       title: item.title,
-      headerRight: () => (
-        <IconButton onPress={() => console.log("star icon clicked.")} />
-      ),
+      headerRight: () => <IconButton id={itemId} />,
     });
   }, [navigation, item]);
 
